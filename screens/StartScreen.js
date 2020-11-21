@@ -14,9 +14,34 @@ import Input from '../components/Input'
 const StartScreen = props => {
 
     const [enteredValue, setEnteredValue] = useState('')
+    const [confirmed, setConfirmed] = useState(false)
+    const [selectedNumber, setSelectedNumber] = useState()
 
     const numberInputHandler = (inputText) => {
         setEnteredValue(inputText.replace(/[^0-9]/g, ''))
+    }
+
+    const setInputHandler = () => {
+        setEnteredValue('')
+        setConfirmed(false)
+    }
+
+    const confirmInputHandler = () => {
+        const chosenNumber = parseInt(enteredValue)
+
+        if (chosenNumber === NaN || chosenNumber <= 0 || chosenNumber > 99 ) {
+            return
+        }
+
+        setConfirmed(true)
+        setSelectedNumber(chosenNumber)
+        setEnteredValue('')
+    }
+
+    let confirmedOutput
+
+    if (confirmed) {
+        confirmedOutput = <Text>Chosen Number: {selectedNumber}</Text>
     }
 
     return(
@@ -39,18 +64,19 @@ const StartScreen = props => {
                             <Button 
                                 title="Reset" 
                                 color={Colors.accent} 
-                                onPress={() => {}} 
+                                onPress={setInputHandler} 
                             />
                         </View>
                         <View style={styles.button}>
                             <Button 
                                 title="Confirm" 
                                 color={Colors.primary} 
-                                nPress={() => {}} 
+                                onPress={confirmInputHandler} 
                             />
                         </View>
                     </View>
                 </Card>
+                {confirmedOutput}
             </View>
         </TouchableWithoutFeedback>
     )
