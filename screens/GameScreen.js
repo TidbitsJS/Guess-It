@@ -36,7 +36,6 @@ const GameScreen = (props) => {
   }, [currentGuess, userChoice, onGameOver]);
 
   const nextGuessHandler = (direction) => {
-    console.log("In nextGuessHandler");
     if (
       (direction === "lower" && currentGuess < props.userChoice) ||
       (direction === "greater" && currentGuess > props.userChoice)

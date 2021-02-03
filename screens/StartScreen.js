@@ -51,9 +51,7 @@ const StartScreen = (props) => {
   if (confirmed) {
     confirmedOutput = (
       <Card style={styles.summaryContainer}>
-        <Text
-          style={{ fontFamily: "open-sans", marginBottom: 10, fontSize: 18 }}
-        >
+        <Text style={{ fontFamily: "open-sans", fontSize: 15 }}>
           You Selected
         </Text>
         <NumberContainer>{selectedNumber}</NumberContainer>
@@ -113,7 +111,8 @@ const styles = StyleSheet.create({
 
   title: {
     fontSize: 20,
-    marginVertical: 20,
+    marginVertical: 10,
+    marginBottom: 20,
     fontFamily: "open-sans-bold",
   },
 
