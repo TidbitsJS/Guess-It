@@ -51,7 +51,11 @@ const StartScreen = (props) => {
   if (confirmed) {
     confirmedOutput = (
       <Card style={styles.summaryContainer}>
-        <Text>You Selected</Text>
+        <Text
+          style={{ fontFamily: "open-sans", marginBottom: 10, fontSize: 18 }}
+        >
+          You Selected
+        </Text>
         <NumberContainer>{selectedNumber}</NumberContainer>
         <Button
           title="START GAME"
@@ -109,7 +113,8 @@ const styles = StyleSheet.create({
 
   title: {
     fontSize: 20,
-    marginVertical: 15,
+    marginVertical: 20,
+    fontFamily: "open-sans-bold",
   },
 
   inputContainer: {
