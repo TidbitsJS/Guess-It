@@ -1,8 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Text, StyleSheet, Button, Alert } from "react-native";
+import { View, Text, StyleSheet, Alert } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 import NumberContainer from "../components/NumberContainer";
 import Card from "../components/Card";
+import Colors from "../constants/Color";
+import IconButton from "../components/IconButton";
 
 const generateRandomBetween = (min, max, exclude) => {
   min = Math.ceil(min);
@@ -64,24 +67,32 @@ const GameScreen = (props) => {
   return (
     <View style={styles.screen}>
       <Text
-        style={{ fontFamily: "open-sans-bold", fontSize: 17, marginBottom: 10 }}
+        style={{
+          fontFamily: "open-sans-bold",
+          fontSize: 20,
+          marginVertical: 15,
+        }}
       >
         Opponent's Guess
       </Text>
       <NumberContainer>{currentGuess}</NumberContainer>
       <Card style={styles.buttonContainer}>
-        <Button
-          title="Lower"
+        <IconButton
           onPress={() => {
             nextGuessHandler("lower");
           }}
-        />
-        <Button
-          title="Greater"
+          style={{ backgroundColor: Colors.lower }}
+        >
+          <Ionicons name="md-remove" size={25} />
+        </IconButton>
+        <IconButton
           onPress={() => {
             nextGuessHandler("greater");
           }}
-        />
+          style={{ backgroundColor: Colors.greater }}
+        >
+          <Ionicons name="md-add" size={25} />
+        </IconButton>
       </Card>
     </View>
   );
@@ -96,7 +107,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
-    marginTop: 20,
+    marginTop: 10,
     width: 300,
     maxWidth: "80%",
   },
