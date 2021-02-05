@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -12,13 +12,33 @@ import Colors from "../constants/Color";
 import CustomButton from "../components/CustomButton";
 
 const GameOverScreen = (props) => {
+  const [availableWidth, setAvailableWidth] = useState(
+    Dimensions.get("window").width
+  );
+
+  useEffect(() => {
+    const updateLayout = () => {
+      setAvailableWidth(Dimensions.get("window").width);
+    };
+
+    Dimensions.addEventListener("change", updateLayout);
+
+    return () => {
+      Dimensions.removeEventListener("change", updateLayout);
+    };
+  });
+
   return (
     <ScrollView contentContainerStyle={styles.scrollScreen}>
       <View style={styles.screen}>
         <Text style={styles.gameOver}>The Game is Over !</Text>
         <Image
           source={require("../assets/success.png")}
-          style={styles.image}
+          style={{
+            width: availableWidth * 0.8,
+            height: availableWidth * 0.9,
+            borderRadius: (availableWidth * 0.8) / 5,
+          }}
           resizeMode="contain"
         />
         <Text style={styles.text}>
@@ -37,11 +57,12 @@ const GameOverScreen = (props) => {
 
 const styles = StyleSheet.create({
   scrollScreen: {
-    flex: 1,
+    flexGrow: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   screen: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },

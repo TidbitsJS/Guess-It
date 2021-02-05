@@ -28,7 +28,6 @@ const generateRandomBetween = (min, max, exclude) => {
 };
 
 const renderListItem = (listLength, rndColor, itemData) => {
-  console.log(itemData);
   return (
     <View
       style={{
@@ -47,17 +46,29 @@ const GameScreen = (props) => {
   const initialGuess = generateRandomBetween(1, 100, props.userChoice);
   const initialColor =
     initialGuess < userChoice ? Colors.lower : Colors.greater;
-
   const [currentGuess, setCurrentGuess] = useState(initialGuess);
-
   const [pastGuesses, setPastGuesses] = useState([initialGuess.toString()]);
-
   const [color, setColor] = useState(initialColor);
+  const [availableHeight, setAvailableHeight] = useState(
+    Dimensions.get("window").height
+  );
 
   const currentLow = useRef(1);
   const currentHigh = useRef(100);
 
   const { userChoice, onGameOver } = props;
+
+  useEffect(() => {
+    const updateLayout = () => {
+      setAvailableHeight(Dimensions.get("window").height);
+    };
+
+    Dimensions.addEventListener("change", updateLayout);
+
+    return () => {
+      Dimensions.addEventListener("change", updateLayout);
+    };
+  });
 
   useEffect(() => {
     if (currentGuess === userChoice) {
@@ -93,6 +104,28 @@ const GameScreen = (props) => {
     setPastGuesses((curPastGuess) => [nextNumber.toString(), ...curPastGuess]);
   };
 
+  const landscapeLayout = (
+    <View style={styles.landscapeScreen}>
+      <IconButton
+        onPress={() => {
+          nextGuessHandler("lower");
+        }}
+        style={{ backgroundColor: Colors.lower }}
+      >
+        <Ionicons name="md-remove" size={25} />
+      </IconButton>
+      <NumberContainer>{currentGuess}</NumberContainer>
+      <IconButton
+        onPress={() => {
+          nextGuessHandler("greater");
+        }}
+        style={{ backgroundColor: Colors.greater }}
+      >
+        <Ionicons name="md-add" size={25} />
+      </IconButton>
+    </View>
+  );
+
   return (
     <View style={styles.screen}>
       <Text
@@ -104,25 +137,31 @@ const GameScreen = (props) => {
       >
         Opponent's Guess
       </Text>
-      <NumberContainer>{currentGuess}</NumberContainer>
-      <Card style={styles.buttonContainer}>
-        <IconButton
-          onPress={() => {
-            nextGuessHandler("lower");
-          }}
-          style={{ backgroundColor: Colors.lower }}
-        >
-          <Ionicons name="md-remove" size={25} />
-        </IconButton>
-        <IconButton
-          onPress={() => {
-            nextGuessHandler("greater");
-          }}
-          style={{ backgroundColor: Colors.greater }}
-        >
-          <Ionicons name="md-add" size={25} />
-        </IconButton>
-      </Card>
+      {availableHeight < 500 ? (
+        landscapeLayout
+      ) : (
+        <>
+          <NumberContainer>{currentGuess}</NumberContainer>
+          <Card style={styles.buttonContainer}>
+            <IconButton
+              onPress={() => {
+                nextGuessHandler("lower");
+              }}
+              style={{ backgroundColor: Colors.lower }}
+            >
+              <Ionicons name="md-remove" size={25} />
+            </IconButton>
+            <IconButton
+              onPress={() => {
+                nextGuessHandler("greater");
+              }}
+              style={{ backgroundColor: Colors.greater }}
+            >
+              <Ionicons name="md-add" size={25} />
+            </IconButton>
+          </Card>
+        </>
+      )}
       <View style={styles.listContainer}>
         {/* <ScrollView>
           {pastGuesses.map((guess, index) =>
@@ -146,6 +185,13 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: "center",
   },
+  landscapeScreen: {
+    flex: 1,
+    flexDirection: "row",
+    width: "80%",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+  },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
@@ -156,7 +202,7 @@ const styles = StyleSheet.create({
   listContainer: {
     flex: 1,
     width: Dimensions.get("window").width > 350 ? "90%" : "70%",
-    marginTop: 20,
+    marginTop: Dimensions.get("window").height < 500 ? 10 : 20,
   },
   listItem: {
     borderWidth: 1.5,
